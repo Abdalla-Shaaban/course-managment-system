@@ -1,0 +1,275 @@
+<html>
+    <head>
+        <title>Teacher's Page</title>
+        <script>
+            function getQuestions(params){
+                var xhttp = new XMLHttpRequest();
+                var question = "";
+                var Difficulty = '';
+                var keywords = '';
+
+                xhttp.open("POST","https://web.njit.edu/~aes38/getQ.php", true);
+                xhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhttp.send(); 
+
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var obj = JSON.parse(this.responseText);  
+                        var count = 0;
+                        for(var i in obj.questions){
+                            question += '<tr class="row">';
+                            question += "<td>"+ obj.questions[i].question+"</td>";
+                            question += '<td><input type="button" class="question" value="Add question" onclick="addQuestion('+count+')"></td>';
+                            question += "</tr>";       
+                            count++;
+                        } 
+
+                        document.getElementById('t01').innerHTML = question;
+                    }
+                };
+            }
+           
+            function addQuestion(x){ 
+                var question = document.getElementById('t01').rows[x].cells[0].innerHTML;
+                var params = "question="+question;
+                var xhttp = new XMLHttpRequest();
+                document.getElementById('demo').innerHTML = "Question added";
+
+                xhttp.open("POST","https://web.njit.edu/~aes38/addQ.php", true);
+                xhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhttp.send(params);
+
+            }
+            function createQuestion(){
+                var xhttp = new XMLHttpRequest();
+                var question = document.getElementById('question').value;
+                var result = document.getElementById('result').value;
+                var testCase = document.getElementById('testCase').value;
+                var params = 'question='+question+'&testCase='+testCase+'&result='+result;
+
+                xhttp.open("POST","https://web.njit.edu/~aes38/sendQ.php", true);
+                xhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                
+                if(question != "" && result != "" && testCase != "")
+                    xhttp.send(params);        
+            }
+            function getTest(){
+                var xhttp = new XMLHttpRequest();
+                var question = "";
+
+                xhttp.open("POST","https://web.njit.edu/~aes38/getTest.php", true);
+                xhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhttp.send(); 
+
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var obj = JSON.parse(this.responseText);  
+                            
+                        for(var i in obj.questions){
+                            question += '<tr class="row">';
+                            question += "<td>"+ obj.questions[i].question+"</td>";
+                            question += "</tr>";       
+                        } 
+                        //$('#t02').html(question);
+                        document.getElementById('t02').innerHTML = question;
+                    }
+                };
+            }
+            function deleteTest(){
+                var xhttp = new XMLHttpRequest();
+
+                xhttp.open("POST","https://web.njit.edu/~aes38/deleteTest.php", true);
+                xhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhttp.send(); 
+            }
+            function postGrades(){
+                var xhttp = new XMLHttpRequest();
+
+                xhttp.open("POST","https://web.njit.edu/~aes38/createGrades.php", true);
+                xhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhttp.send();
+                //$('#gradesPosted').html("Posted grades to students"); 
+                document.getElementById('gradesPosted').innerHTML = "Posted grades to students";
+            }
+            function testing(params){
+                var testVal = document.getElementById('test');
+                testVal.value = params;
+                testVal.innerHTML= params;
+            }
+        </script>
+        <style>
+            body{
+              background: url(background2.jpg) no-repeat center center fixed; 
+              -webkit-background-size: cover;
+              -moz-background-size: cover;
+              -o-background-size: cover;
+              background-size: cover;
+              font-family: Arial, Helvetica, sans-serif;
+            }
+            .tabContainer{
+                width: 100%;
+                height: 350px;
+            }
+            .tabContainer .buttonContainer{
+                height: 15%;
+            }
+            .tabContainer .buttonContainer button{
+                width: 25%;
+                height: 100%;
+                float: left;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                padding: 10px;
+                font-family: sans-serif;
+                font-size: 18px;
+                background-color: rgb(90, 142, 238);
+            }
+            .tabContainer .buttonContainer button:hover{
+                background-color: lightblue;
+            }
+            .tabContainer .tabPanel{
+                height: auto;
+                min-height: 85%;
+                background-color: gray;
+                color: white;
+                
+                padding-top: 30px;
+                padding-left: 30px;
+                box-sizing: border-box;
+                font-family: sans-serif;
+                font-size: 18px;
+                display: none;
+            }
+            .logo{
+                border-radius: 50%;
+                width: 260px;
+                height: 150px;
+
+            }
+        </style>
+        <style>
+            table {
+                width:100%;
+            }
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 15px;
+                text-align: left;
+            }
+            table tr:nth-child(even) {
+                background-color: #eee;
+            }
+            table tr:nth-child(odd) {
+               background-color: #fff;
+            }
+            </style>
+            <style>
+                input[type="button"]{
+                    border: none;
+                    outline: none;
+                    height: 40px;
+                    background: #447cf5d5;
+                    color: rgb(255, 255, 255);
+                    font-size: 15px;
+                    border-radius: 5px;
+                }
+                input[type="button"]:hover{
+                    cursor: pointer;
+                    background: #75aafa;
+                    color: rgb(255, 255, 255);
+                }
+                textarea{
+                    padding-left: 0px;
+                    padding-top: 0;
+                    padding-bottom: 0.4em;
+                    padding-right: 0.4em;
+                }
+            </style>
+    </head>
+    <body>
+        <a href="https://web.njit.edu/~aes38"><img src="logout.png" alt="logout" width="42" height="42" style="float: right"/></a>
+        <img src="poodle-logo.png" alt="Poodle logo" class="logo">
+        <div class="tabContainer">
+            <div class="buttonContainer">
+                <button onclick="showPanel(0,'#4caf50')">Home</button>
+                <button onclick="showPanel(1,'#4caf50');getTest();">Tests</button>
+                <button onclick="showPanel(2,'#2196f3')">Create Tests</button>
+                <button onclick="showPanel(3,'#2196f3')">Grades</button>                    
+            </div>
+                <div class="tabPanel">
+                    <h1 style="text-align:center; padding-top: 50px;">Welcome to CS 100</h1>
+                </div>
+                <div class="tabPanel" id="tests">
+                    <h3>Current exam questions</h3>
+                    <input type="button" value="Delete exam" onclick="deleteTest()">
+                    <table id="t02"></table>
+
+                </div>
+                <div class="tabPanel">
+                    <h3>Create your own question</h3>
+                    <form>
+                    <label>Question:</label><br>
+                    <textarea id="question" cols="50" rows="15" required></textarea><br>
+                    <label>function name: </label>
+                    <input type="text" id="functionName" required>
+                    <label>Expected result: </label>
+                    <input type="text" id="result" required><br>
+                    <label>Number of Test cases: </label>
+                    <input type="text" id="testCase" required><br>
+                    <input type="submit" value="Create question" onclick="createQuestion()">
+                    </form>
+                    <h3>Choose from a list of questions</h3>
+                    <label>Difficulty:</label> 
+                    <select onchange="getQuestions(this.value)">
+                        <option>--</option>
+                        <option value="easy">easy</option>
+                        <option value="medium">medium</option>
+                        <option value="hard">hard</option>
+                    </select><br>
+                    <label>keywords:</label> 
+                    <select onchange="getQuestions(this.value)">
+                        <option>--</option>
+                        <option value="test1">test 1</option>
+                        <option value="test2">test 2</option>
+                        <option value="test3">test 3</option>
+                    </select>
+                    <p id="demo"></p>
+                    <table id="t01"></table>
+                </div>
+                <div class="tabPanel" id="grades">
+                    <input type="button" value="Finalize and Post Grades" onclick="postGrades();">
+                    <p id="gradesPosted"></p>
+                </div>
+        </div>
+        <script>
+            var tabButtons=document.querySelectorAll(".tabContainer .buttoncontainer button");
+            var tabPanels=document.querySelectorAll(".tabContainer .tabPanel");
+
+            function showPanel(panelIndex,colorCode){
+                tabButtons.forEach(function(node){
+                    node.style.backgroundcolor="";
+                    node.style.color="";
+
+                });
+                tabButtons[panelIndex].style.backgroundcolor=colorCode;
+                tabButtons[panelIndex].style.color="white";
+                tabPanels.forEach(function(node){
+                node.style.display="none";
+                });
+                tabPanels[panelIndex].style.display="block";
+                tabPanels[panelIndex].style.backgroundcolor=colorCode;
+                }
+                showPanel(0,'#f44336');  
+        </script> 
+    </body>
+</html>
