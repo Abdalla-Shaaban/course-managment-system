@@ -9,9 +9,9 @@ the need to finalize those grades as they see fit.
 The login Credentials for live demo:
 
 teacher login:
-  UCID = teacher1
+  UCID = teacher1,
   password = pass
   
 student login:
-  UCID = student1
+  UCID = student1,
   password = pass
